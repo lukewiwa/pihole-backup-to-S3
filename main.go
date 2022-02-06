@@ -37,7 +37,7 @@ func getAwsConfig() (aws.Config, error) {
 }
 
 func main() {
-	bucketName := os.Getenv("PB2S3_BUCKET_NAME")
+	bucketName := os.Getenv("PB2S3_AWS_BUCKET_NAME")
 
 	cfg, err := getAwsConfig()
 	if err != nil {

@@ -8,7 +8,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "deploy": "cdk deploy --parameters piholeBackupBucketName=\"$PB2S3_AWS_BUCKET_NAME\" --require-approval never"
   },
   "devDependencies": {
     "@types/jest": "^26.0.10",
