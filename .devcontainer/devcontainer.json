@@ -8,9 +8,7 @@
 			// Update the VARIANT arg to pick a version of Go: 1, 1.16, 1.17
 			// Append -bullseye or -buster to pin to an OS version.
 			// Use -bullseye variants on local arm64/Apple Silicon.
-			"VARIANT": "1-bullseye",
-			// Options
-			"NODE_VERSION": "16"
+			"VARIANT": "1-bullseye"
 		}
 	},
 	"runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined", "--env-file=.env" ],
@@ -31,13 +29,9 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm --prefix infra install",
-
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode",
 	"mounts": [
-		"source=pc2s3-npm-cache,target=/workspaces/pihole-config-backup/infra/node_modules,type=volume",
-		"source=pc2s3-vscode-etx-cache,target=/home/vscode/.vscode-server/extensions,type=volume",
+		"source=pc2s3-vscode-etx-cache,target=/home/vscode/.vscode-server/extensions,type=volume"
 	]
 }
