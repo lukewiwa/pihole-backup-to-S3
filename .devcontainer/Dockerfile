@@ -11,5 +11,5 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 COPY setupVars.conf /etc/pihole/setupVars.conf
 RUN curl -L https://install.pi-hole.net | bash /dev/stdin --unattended; exit 0
 
-RUN mkdir -p /workspaces/pihole-config-backup/infra/node_modules /home/vscode/.vscode-server/extensions && \
-    chown -R vscode /workspaces /home/vscode/.vscode-server
+RUN mkdir -p /home/vscode/.vscode-server/extensions && \
+    chown -R vscode /home/vscode/.vscode-server

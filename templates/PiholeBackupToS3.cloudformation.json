@@ -1,0 +1,127 @@
+{
+  "Parameters": {
+    "piholeBackupBucketName": {
+      "Type": "String",
+      "Description": "The name of the Amazon S3 bucket where uploaded files will be stored."
+    }
+  },
+  "Resources": {
+    "PiholeBackupS3Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {
+          "Ref": "piholeBackupBucketName"
+        },
+        "Tags": [
+          {
+            "Key": "project",
+            "Value": "piholebackup"
+          }
+        ]
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain"
+    },
+    "PiholeBackupUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "project",
+            "Value": "piholebackup"
+          }
+        ]
+      }
+    },
+    "PiholeBackupUserDefaultPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "PiholeBackupS3Bucket",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "PiholeBackupS3Bucket",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "s3:PutObject",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "PiholeBackupS3Bucket",
+                        "Arn"
+                      ]
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "PiholeBackupUserDefaultPolicy",
+        "Users": [
+          {
+            "Ref": "PiholeBackupUser"
+          }
+        ]
+      }
+    },
+    "PiholeBackupAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "UserName": {
+          "Ref": "PiholeBackupUser"
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "accessKeyId": {
+      "Value": {
+        "Ref": "PiholeBackupAccessKey"
+      }
+    },
+    "secretAccessKey": {
+      "Value": {
+        "Fn::GetAtt": [
+          "PiholeBackupAccessKey",
+          "SecretAccessKey"
+        ]
+      }
+    }
+  }
+}
